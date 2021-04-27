@@ -1,6 +1,0 @@
-%% Reading in Data
-filename = 'forest-area-as-share-of-land-area.csv';
-ForestTable = readtable(filename);
-
-Countries = ForestTable.Entity
-Brazil.Index = find(Countries == 'Brazil')
