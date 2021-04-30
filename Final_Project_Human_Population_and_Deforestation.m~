@@ -1,5 +1,12 @@
-% forest = green. 
-% US = Blue, Brazil = Yellow, Liberia = Red
+% forest = black, pop = country color, gdp = country color, dashed
+% US = Blue, Brazil = green, Liberia = Red
+% order = US, BRA, LIB
+% LineWidth 
+
+% Emily 2,3
+% Finn 4,5
+% Daria 6,7
+% Paul 8,9
 
 %% Reading in Land Cover Data
 filename = 'forest-area-as-share-of-land-area.csv';
@@ -154,15 +161,15 @@ end
 figure (1)
 subplot(2,1,1)
 yyaxis left
-plot(years, (100-Forest_BRA))
+plot(years, (100-Forest_BRA), 'k', 'LineWidth', 2)
 yyaxis right
-plot(years, Pop_BRA)
+plot(years, Pop_BRA, 'g', 'LineWidth', 2)
 hold on
 subplot(2,1,2)
 yyaxis left
-plot(years, (100-Forest_BRA))
+plot(years, (100-Forest_BRA), 'k', 'LineWidth', 2)
 yyaxis right
-plot(years_GDP, GDP_BRA)
+plot(years_GDP, GDP_BRA, '--g', 'LineWidth', 2)
 
 figure (2); clf
 subplot(2,1,1)
@@ -222,26 +229,45 @@ GDPAvRate = [GDP_Rate_Av_BRA, GDP_Rate_Av_US, GDP_Rate_Av_LIB];
 
 figure(7); clf
 bar(GDPAvRate)
-
+%%
 ForestCover1990 = [Forest_US(1), Forest_BRA(1), Forest_LIB(1)];
+X = categorical({'United States', 'Brazil', 'Liberia'});
+X = reordercats(X, {'United States', 'Brazil', 'Liberia'});
 
 figure(8); clf
-bar(ForestCover1990)
+bar([1], ForestCover1990(1), 'FaceColor', 'b')
+hold on
+bar([2], ForestCover1990(2), 'FaceColor', 'g')
+bar([3], ForestCover1990(3), 'FaceColor', 'r')
+hold off
+%%
+b = bar(X, ForestCover1990)
+b.FaceColor = 'Flat';
+b.CData(2,:) = 
+
+
+% for i = 1:3
+%     h = bar(ForestCover1990)
+%     if i == 1
+%         col = 'b'
+%     end
+%     if i == 2
+%         col = 'g'
+%     end
+%     if i == 3 
+%         col = 'r'
+%     end
+%     set(h, 'FaceColor', col)
+% end
 
 %%
-% figure (9)
-% subplot(2,1,1)
-% yyaxis left
-% plot(years, (100-F_Rate_BRA))
-% yyaxis right
-% plot(years, Pop_Rate_BRA)
-% hold on
-% subplot(2,1,2)
-% yyaxis left
-% plot(years, (100-F_Rate_BRA))
-% yyaxis right
-% plot(years_GDP, GDP_Rate_BRA)
-
+% unit for forest cover rate of change?
 figure(9)
-plot(years, F_Rate_US, years, F_Rate_BRA, years, F_Rate_LIB)
+plot(years, F_Rate_US, 'b', 'LineWidth', 2)
+hold on
+plot(years, F_Rate_BRA, 'g', 'LineWidth', 2)
+plot(years, F_Rate_LIB, 'r', 'LineWidth', 2)
 legend('United States', 'Brazil', 'Liberia')
+title('Annual Forest Cover Rate of Change for 1990-2020')
+xlabel('Years')
+ylabel('Forest Cover Rate of Change')

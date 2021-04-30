@@ -229,14 +229,28 @@ GDPAvRate = [GDP_Rate_Av_BRA, GDP_Rate_Av_US, GDP_Rate_Av_LIB];
 
 figure(7); clf
 bar(GDPAvRate)
-
+%%
 ForestCover1990 = [Forest_US(1), Forest_BRA(1), Forest_LIB(1)];
+X = categorical({'United States', 'Brazil', 'Liberia'});
+X = reordercats(X, {'United States', 'Brazil', 'Liberia'});
 
+% do we need y-label?
 figure(8); clf
-bar(ForestCover1990)
+b = bar(X, ForestCover1990)
+b.FaceColor = 'Flat';
+b.CData(2,:) = [0 1 0]
+b.CData(3,:) = [1 0 0]
+title('Percent of Forest Cover in 1990')
+ylabel('Percent of Forest Cover')
 
 %%
-
+% unit for forest cover rate of change?
 figure(9)
-plot(years, F_Rate_US, years, F_Rate_BRA, years, F_Rate_LIB)
+plot(years, F_Rate_US, 'b', 'LineWidth', 2)
+hold on
+plot(years, F_Rate_BRA, 'g', 'LineWidth', 2)
+plot(years, F_Rate_LIB, 'r', 'LineWidth', 2)
 legend('United States', 'Brazil', 'Liberia')
+title('Annual Forest Cover Rate of Change for 1990-2020')
+xlabel('Years')
+ylabel('Forest Cover Rate of Change')
