@@ -158,45 +158,82 @@ for i = 1:3
 end
    
 %% 
-figure (1)
+figure (1); clf
+newcolors1 = [0 0 0; 0 0 1];
+colororder(newcolors1)
+
+subplot(2,1,1)
+yyaxis left
+plot(years, (100-Forest_US), 'k', 'LineWidth', 2)
+title('United States Forest Cover vs. Population Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
+yyaxis right
+plot(years, Pop_US, 'b', 'LineWidth', 2)
+ylabel('Population');
+
+hold on
+subplot(2,1,2)
+yyaxis left
+plot(years, (100-Forest_US), 'k', 'LineWidth', 2)
+title('United States Forest Cover vs. GDP Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
+yyaxis right
+plot(years_GDP, GDP_US, '--b', 'LineWidth', 2)
+ylabel('GDP (USD)');
+
+
+figure (2)
+newcolors2 = [0 0 0; 0 1 0];
+colororder(newcolors2)
+
 subplot(2,1,1)
 yyaxis left
 plot(years, (100-Forest_BRA), 'k', 'LineWidth', 2)
+title('Brazil Forest Cover vs. Population Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
 yyaxis right
 plot(years, Pop_BRA, 'g', 'LineWidth', 2)
+ylabel('Population');
+
 hold on
 subplot(2,1,2)
 yyaxis left
 plot(years, (100-Forest_BRA), 'k', 'LineWidth', 2)
+title('Brazil Forest Cover vs. GDP Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
 yyaxis right
 plot(years_GDP, GDP_BRA, '--g', 'LineWidth', 2)
+ylabel('GDP (USD)');
 
-figure (2); clf
-subplot(2,1,1)
-yyaxis left
-plot(years, (100-Forest_US))
-yyaxis right
-plot(years, Pop_US)
-hold on
-subplot(2,1,2)
-yyaxis left
-plot(years, (100-Forest_US))
-yyaxis right
-plot(years_GDP, GDP_US)
 
 figure (3); clf
+newcolors3 = [0 0 0; 1 0 0];
+colororder(newcolors3)
+
 subplot(2,1,1)
 yyaxis left
-plot(years, (100-Forest_LIB))
+plot(years, (100-Forest_LIB), 'k', 'LineWidth', 2)
+title('Liberia Forest Cover vs. Population Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
 yyaxis right
-plot(years, Pop_LIB)
+plot(years, Pop_LIB, 'r', 'LineWidth', 2)
+ylabel('Population');
+
 hold on
 subplot(2,1,2)
 yyaxis left
-plot(years, (100-Forest_LIB))
+plot(years, (100-Forest_LIB), 'k', 'LineWidth', 2)
+title('Liberia Forest Cover vs. GDP Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
 yyaxis right
-plot(years_GDP, GDP_LIB)
-
+plot(years_GDP, GDP_LIB, '--r', 'LineWidth', 2)
+ylabel('GDP (USD)');
 
 %%
 [~,~, ~, ~, stats] = regress(Pop_BRA, (100-Forest_BRA));

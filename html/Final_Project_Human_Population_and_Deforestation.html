@@ -1,0 +1,728 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Final_Project_Human_Population_and_Deforestation</title><meta name="generator" content="MATLAB 9.8"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-05-03"><meta name="DC.source" content="Final_Project_Human_Population_and_Deforestation.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Reading in Land Cover Data</a></li><li><a href="#3">Population Data</a></li><li><a href="#4">GDP Data</a></li><li><a href="#5">Preliminary Data Analysis</a></li><li><a href="#6">Forest Cover Basic Statistics</a></li><li><a href="#7">Population Basic Statistics</a></li><li><a href="#8">GDP Basic Statistics</a></li></ul></div><pre class="codeinput"><span class="comment">% forest = black, pop = country color, gdp = country color, dashed</span>
+<span class="comment">% US = Blue, Brazil = green, Liberia = Red</span>
+<span class="comment">% order = US, BRA, LIB</span>
+<span class="comment">% LineWidth</span>
+
+<span class="comment">% Emily 2,3</span>
+<span class="comment">% Finn 4,5</span>
+<span class="comment">% Daria 6,7</span>
+<span class="comment">% Paul 8,9</span>
+</pre><h2 id="2">Reading in Land Cover Data</h2><pre class="codeinput">filename = <span class="string">'forest-area-as-share-of-land-area.csv'</span>;
+ForestTable = readtable(filename);
+Countries = ForestTable.Entity;
+
+idx = find(strcmp(<span class="string">'Brazil'</span>, Countries));
+Forest_BRA = table2array(ForestTable(idx, 4));
+
+idx = find(strcmp(<span class="string">'United States'</span>, Countries));
+Forest_US = table2array(ForestTable(idx, 3:4));
+idx = find(Forest_US(:,1) &gt;= 1990);
+Forest_US = Forest_US(idx,2);
+
+idx = find(strcmp(<span class="string">'Liberia'</span>, Countries));
+Forest_LIB = table2array(ForestTable(idx, 4));
+</pre><pre class="codeoutput">Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'PreserveVariableNames' to true to use the original column headers as table
+variable names. 
+</pre><h2 id="3">Population Data</h2><pre class="codeinput">filename = <span class="string">'Pop_Data.csv'</span>;
+PopTable = readtable(filename);
+years = 1990:1:2020;
+years = years';
+Pop_BRA = table2array(PopTable(1,5:35))';
+Pop_US = table2array(PopTable(3,5:35))';
+Pop_LIB = table2array(PopTable(2,5:35))';
+</pre><pre class="codeoutput">Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'PreserveVariableNames' to true to use the original column headers as table
+variable names. 
+</pre><h2 id="4">GDP Data</h2><pre class="codeinput">filename = <span class="string">'GDPpercapita.csv'</span>;
+GDPTable = readtable(filename);
+
+GDP_BRA = table2array(GDPTable(1,5:34))';
+GDP_US = table2array(GDPTable(3,5:34))';
+GDP_LIB = table2array(GDPTable(2,5:34))';
+</pre><pre class="codeoutput">Warning: Column headers from the file were modified to make them valid MATLAB
+identifiers before creating variable names for the table. The original column
+headers are saved in the VariableDescriptions property.
+Set 'PreserveVariableNames' to true to use the original column headers as table
+variable names. 
+</pre><h2 id="5">Preliminary Data Analysis</h2><h2 id="6">Forest Cover Basic Statistics</h2><pre class="codeinput">F_Av_BRA = mean(Forest_BRA);
+F_Av_US = mean(Forest_US);
+F_Av_LIB = mean(Forest_LIB);
+
+F_Rate_BRA = gradient(Forest_BRA);
+F_Rate_US = gradient(Forest_US);
+F_Rate_LIB = gradient(Forest_LIB);
+
+F_Rate_Av_BRA = mean(F_Rate_BRA);
+F_Rate_Av_US = mean(F_Rate_US);
+F_Rate_Av_LIB = mean(F_Rate_LIB);
+
+<span class="comment">%For F_DecAvs, the rows are Brazil, US, and Liberia in order from top to bottom and the columns are 1990s, 2000s, and 2010s in order from left to right</span>
+<span class="comment">% the 2010s includes data from 2020</span>
+F_DecAvs = NaN(3,3);
+<span class="keyword">for</span> i = 1:3
+    <span class="keyword">if</span> i == 1
+        idx = 1:10;
+        F_DecAvs(1,1) = mean(Forest_BRA(idx));
+        F_DecAvs(2,1) = mean(Forest_US(idx));
+        F_DecAvs(3,1) = mean(Forest_LIB(idx));
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> i == 2
+        idx = 11:20;
+        F_DecAvs(1,2) = mean(Forest_BRA(idx));
+        F_DecAvs(2,2) = mean(Forest_US(idx));
+        F_DecAvs(3,2) = mean(Forest_LIB(idx));
+    <span class="keyword">end</span>
+   <span class="keyword">if</span> i == 3
+        idx = 21:31;
+        F_DecAvs(1,3) = mean(Forest_BRA(idx));
+        F_DecAvs(2,3) = mean(Forest_US(idx));
+        F_DecAvs(3,3) = mean(Forest_LIB(idx));
+   <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="7">Population Basic Statistics</h2><pre class="codeinput">P_Av_BRA = mean(Pop_BRA);
+P_Av_US = mean(Pop_US);
+P_Av_LIB = mean(Pop_LIB);
+
+Pop_Rate_BRA = gradient(Pop_BRA);
+Pop_Rate_US = gradient(Pop_US);
+Pop_Rate_LIB = gradient(Pop_LIB);
+
+Pop_Rate_Av_BRA = mean(Pop_Rate_BRA);
+Pop_Rate_Av_US = mean(Pop_Rate_US);
+Pop_Rate_Av_LIB = mean(Pop_Rate_LIB);
+
+<span class="comment">%For Pop_DecAvs, the rows are Brazil, US, and Liberia in order from top to bottom and the columns are 1990s, 2000s, and 2010s from left to right</span>
+<span class="comment">% the 2010s includes data from 2020</span>
+Pop_DecAvs = NaN(3,3);
+<span class="keyword">for</span> i = 1:3
+    <span class="keyword">if</span> i == 1
+        idx = 1:10;
+        Pop_DecAvs(1,1) = mean(Pop_BRA(idx));
+        Pop_DecAvs(2,1) = mean(Pop_US(idx));
+        Pop_DecAvs(3,1) = mean(Pop_LIB(idx));
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> i == 2
+        idx = 11:20;
+        Pop_DecAvs(1,2) = mean(Pop_BRA(idx));
+        Pop_DecAvs(2,2) = mean(Pop_US(idx));
+        Pop_DecAvs(3,2) = mean(Pop_LIB(idx));
+    <span class="keyword">end</span>
+   <span class="keyword">if</span> i == 3
+        idx = 21:31;
+        Pop_DecAvs(1,3) = mean(Pop_BRA(idx));
+        Pop_DecAvs(2,3) = mean(Pop_US(idx));
+        Pop_DecAvs(3,3) = mean(Pop_LIB(idx));
+   <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><h2 id="8">GDP Basic Statistics</h2><pre class="codeinput">years_GDP = 1990:1:2019
+
+GDP_Av_BRA = mean(GDP_BRA);
+GDP_Av_US = mean(GDP_US);
+GDP_Av_LIB = nanmean(GDP_LIB);
+
+GDP_Rate_BRA = gradient(GDP_BRA);
+GDP_Rate_US = gradient(GDP_US);
+GDP_Rate_LIB = gradient(GDP_LIB);
+
+GDP_Rate_Av_BRA = mean(GDP_Rate_BRA);
+GDP_Rate_Av_US = mean(GDP_Rate_US);
+GDP_Rate_Av_LIB = nanmean(GDP_Rate_LIB);
+
+<span class="comment">% For GDP_DecAvs, the rows are Brazil, US, and Liberia in order from top to</span>
+<span class="comment">% bottom and the columns are 1990s, 2000s, and 2010s from left to right</span>
+<span class="comment">% the 2010s does not include data from 2020</span>
+<span class="comment">% missing data for Liberia during 1990s</span>
+GDP_DecAvs = NaN(3,3);
+<span class="keyword">for</span> i = 1:3
+    <span class="keyword">if</span> i == 1
+        idx = 1:10;
+        GDP_DecAvs(1,1) = mean(GDP_BRA(idx));
+        GDP_DecAvs(2,1) = mean(GDP_US(idx));
+        GDP_DecAvs(3,1) = mean(GDP_LIB(idx));
+    <span class="keyword">end</span>
+    <span class="keyword">if</span> i == 2
+        idx = 11:20;
+        GDP_DecAvs(1,2) = mean(GDP_BRA(idx));
+        GDP_DecAvs(2,2) = mean(GDP_US(idx));
+        GDP_DecAvs(3,2) = mean(GDP_LIB(idx));
+    <span class="keyword">end</span>
+   <span class="keyword">if</span> i == 3
+        idx = 21:30;
+        GDP_DecAvs(1,3) = mean(GDP_BRA(idx));
+        GDP_DecAvs(2,3) = mean(GDP_US(idx));
+        GDP_DecAvs(3,3) = mean(GDP_LIB(idx));
+   <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">
+years_GDP =
+
+  Columns 1 through 6
+
+        1990        1991        1992        1993        1994        1995
+
+  Columns 7 through 12
+
+        1996        1997        1998        1999        2000        2001
+
+  Columns 13 through 18
+
+        2002        2003        2004        2005        2006        2007
+
+  Columns 19 through 24
+
+        2008        2009        2010        2011        2012        2013
+
+  Columns 25 through 30
+
+        2014        2015        2016        2017        2018        2019
+
+</pre><pre class="codeinput">figure (1); clf
+newcolors1 = [0 0 0; 0 0 1];
+colororder(newcolors1)
+
+subplot(2,1,1)
+yyaxis <span class="string">left</span>
+plot(years, (100-Forest_US), <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 2)
+title(<span class="string">'United States Forest Cover vs. Population Over Time'</span>);
+xlabel(<span class="string">'Time (years)'</span>);
+ylabel(<span class="string">'Forest Cover (% area)'</span>);
+yyaxis <span class="string">right</span>
+plot(years, Pop_US, <span class="string">'b'</span>, <span class="string">'LineWidth'</span>, 2)
+ylabel(<span class="string">'Population'</span>);
+
+hold <span class="string">on</span>
+subplot(2,1,2)
+yyaxis <span class="string">left</span>
+plot(years, (100-Forest_US), <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 2)
+title(<span class="string">'United States Forest Cover vs. GDP Over Time'</span>);
+xlabel(<span class="string">'Time (years)'</span>);
+ylabel(<span class="string">'Forest Cover (% area)'</span>);
+yyaxis <span class="string">right</span>
+plot(years_GDP, GDP_US, <span class="string">'--b'</span>, <span class="string">'LineWidth'</span>, 2)
+ylabel(<span class="string">'GDP (USD)'</span>);
+
+
+figure (2)
+newcolors2 = [0 0 0; 0 1 0];
+colororder(newcolors2)
+
+subplot(2,1,1)
+yyaxis <span class="string">left</span>
+plot(years, (100-Forest_BRA), <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 2)
+title(<span class="string">'Brazil Forest Cover vs. Population Over Time'</span>);
+xlabel(<span class="string">'Time (years)'</span>);
+ylabel(<span class="string">'Forest Cover (% area)'</span>);
+yyaxis <span class="string">right</span>
+plot(years, Pop_BRA, <span class="string">'g'</span>, <span class="string">'LineWidth'</span>, 2)
+ylabel(<span class="string">'Population'</span>);
+
+hold <span class="string">on</span>
+subplot(2,1,2)
+yyaxis <span class="string">left</span>
+plot(years, (100-Forest_BRA), <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 2)
+title(<span class="string">'Brazil Forest Cover vs. GDP Over Time'</span>);
+xlabel(<span class="string">'Time (years)'</span>);
+ylabel(<span class="string">'Forest Cover (% area)'</span>);
+yyaxis <span class="string">right</span>
+plot(years_GDP, GDP_BRA, <span class="string">'--g'</span>, <span class="string">'LineWidth'</span>, 2)
+ylabel(<span class="string">'GDP (USD)'</span>);
+
+
+figure (3); clf
+newcolors3 = [0 0 0; 1 0 0];
+colororder(newcolors3)
+
+subplot(2,1,1)
+yyaxis <span class="string">left</span>
+plot(years, (100-Forest_LIB), <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 2)
+title(<span class="string">'Liberia Forest Cover vs. Population Over Time'</span>);
+xlabel(<span class="string">'Time (years)'</span>);
+ylabel(<span class="string">'Forest Cover (% area)'</span>);
+yyaxis <span class="string">right</span>
+plot(years, Pop_LIB, <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 2)
+ylabel(<span class="string">'Population'</span>);
+
+hold <span class="string">on</span>
+subplot(2,1,2)
+yyaxis <span class="string">left</span>
+plot(years, (100-Forest_LIB), <span class="string">'k'</span>, <span class="string">'LineWidth'</span>, 2)
+title(<span class="string">'Liberia Forest Cover vs. GDP Over Time'</span>);
+xlabel(<span class="string">'Time (years)'</span>);
+ylabel(<span class="string">'Forest Cover (% area)'</span>);
+yyaxis <span class="string">right</span>
+plot(years_GDP, GDP_LIB, <span class="string">'--r'</span>, <span class="string">'LineWidth'</span>, 2)
+ylabel(<span class="string">'GDP (USD)'</span>);
+</pre><img vspace="5" hspace="5" src="Final_Project_Human_Population_and_Deforestation_01.png" alt=""> <img vspace="5" hspace="5" src="Final_Project_Human_Population_and_Deforestation_02.png" alt=""> <img vspace="5" hspace="5" src="Final_Project_Human_Population_and_Deforestation_03.png" alt=""> <pre class="codeinput">[~,~, ~, ~, stats] = regress(Pop_BRA, (100-Forest_BRA));
+PopF_R2_BRA = stats(1,1);
+
+[~,~, ~, ~, stats] = regress(Pop_US, (100-Forest_US));
+PopF_R2_US = stats(1,1);
+
+[~,~, ~, ~, stats] = regress(Pop_LIB, (100-Forest_LIB));
+PopF_R2_LIB = stats(1,1);
+</pre><pre class="codeoutput">Warning: R-square and the F statistic are not well-defined unless X has a column
+of ones.
+Type "help regress" for more information. 
+Warning: R-square and the F statistic are not well-defined unless X has a column
+of ones.
+Type "help regress" for more information. 
+Warning: R-square and the F statistic are not well-defined unless X has a column
+of ones.
+Type "help regress" for more information. 
+</pre><pre class="codeinput">PopAv = [P_Av_BRA, P_Av_US, P_Av_LIB];
+
+figure(4); clf
+bar(PopAv)
+
+PopAvRate = [Pop_Rate_Av_BRA, Pop_Rate_Av_US, Pop_Rate_Av_LIB];
+
+figure(5); clf
+bar(PopAvRate)
+
+GDPAv = [GDP_Av_BRA, GDP_Av_US, GDP_Av_LIB];
+
+figure(6); clf
+bar(GDPAv)
+
+GDPAvRate = [GDP_Rate_Av_BRA, GDP_Rate_Av_US, GDP_Rate_Av_LIB];
+
+figure(7); clf
+bar(GDPAvRate)
+</pre><img vspace="5" hspace="5" src="Final_Project_Human_Population_and_Deforestation_04.png" alt=""> <img vspace="5" hspace="5" src="Final_Project_Human_Population_and_Deforestation_05.png" alt=""> <img vspace="5" hspace="5" src="Final_Project_Human_Population_and_Deforestation_06.png" alt=""> <img vspace="5" hspace="5" src="Final_Project_Human_Population_and_Deforestation_07.png" alt=""> <pre class="codeinput">ForestCover1990 = [Forest_US(1), Forest_BRA(1), Forest_LIB(1)];
+X = categorical({<span class="string">'United States'</span>, <span class="string">'Brazil'</span>, <span class="string">'Liberia'</span>});
+X = reordercats(X, {<span class="string">'United States'</span>, <span class="string">'Brazil'</span>, <span class="string">'Liberia'</span>});
+
+<span class="comment">% do we need y-label?</span>
+figure(8); clf
+b = bar(X, ForestCover1990)
+b.FaceColor = <span class="string">'Flat'</span>;
+b.CData(2,:) = [0 1 0]
+b.CData(3,:) = [1 0 0]
+title(<span class="string">'Percent of Forest Cover in 1990'</span>)
+ylabel(<span class="string">'Percent of Forest Cover'</span>)
+</pre><pre class="codeoutput">
+b = 
+
+  Bar with properties:
+
+    BarLayout: 'grouped'
+     BarWidth: 0.8000
+    FaceColor: [0 0.4470 0.7410]
+    EdgeColor: [0 0 0]
+    BaseValue: 0
+        XData: [United States    Brazil    Liberia]
+        YData: [33.0640 70.4580 88.5096]
+
+  Use GET to show all properties
+
+
+b = 
+
+  Bar with properties:
+
+    BarLayout: 'grouped'
+     BarWidth: 0.8000
+    FaceColor: 'flat'
+    EdgeColor: [0 0 0]
+    BaseValue: 0
+        XData: [United States    Brazil    Liberia]
+        YData: [33.0640 70.4580 88.5096]
+
+  Use GET to show all properties
+
+
+b = 
+
+  Bar with properties:
+
+    BarLayout: 'grouped'
+     BarWidth: 0.8000
+    FaceColor: 'flat'
+    EdgeColor: [0 0 0]
+    BaseValue: 0
+        XData: [United States    Brazil    Liberia]
+        YData: [33.0640 70.4580 88.5096]
+
+  Use GET to show all properties
+
+</pre><img vspace="5" hspace="5" src="Final_Project_Human_Population_and_Deforestation_08.png" alt=""> <p>unit for forest cover rate of change?</p><pre class="codeinput">figure(9)
+plot(years, F_Rate_US, <span class="string">'b'</span>, <span class="string">'LineWidth'</span>, 2)
+hold <span class="string">on</span>
+plot(years, F_Rate_BRA, <span class="string">'g'</span>, <span class="string">'LineWidth'</span>, 2)
+plot(years, F_Rate_LIB, <span class="string">'r'</span>, <span class="string">'LineWidth'</span>, 2)
+legend(<span class="string">'United States'</span>, <span class="string">'Brazil'</span>, <span class="string">'Liberia'</span>)
+title(<span class="string">'Annual Forest Cover Rate of Change for 1990-2020'</span>)
+xlabel(<span class="string">'Years'</span>)
+ylabel(<span class="string">'Forest Cover Rate of Change'</span>)
+</pre><img vspace="5" hspace="5" src="Final_Project_Human_Population_and_Deforestation_09.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% forest = black, pop = country color, gdp = country color, dashed
+% US = Blue, Brazil = green, Liberia = Red
+% order = US, BRA, LIB
+% LineWidth 
+
+% Emily 2,3
+% Finn 4,5
+% Daria 6,7
+% Paul 8,9
+
+%% Reading in Land Cover Data
+filename = 'forest-area-as-share-of-land-area.csv';
+ForestTable = readtable(filename);
+Countries = ForestTable.Entity;
+
+idx = find(strcmp('Brazil', Countries));
+Forest_BRA = table2array(ForestTable(idx, 4));
+
+idx = find(strcmp('United States', Countries));
+Forest_US = table2array(ForestTable(idx, 3:4));
+idx = find(Forest_US(:,1) >= 1990);
+Forest_US = Forest_US(idx,2);
+
+idx = find(strcmp('Liberia', Countries));
+Forest_LIB = table2array(ForestTable(idx, 4));
+
+%% Population Data
+filename = 'Pop_Data.csv';
+PopTable = readtable(filename);
+years = 1990:1:2020;
+years = years';
+Pop_BRA = table2array(PopTable(1,5:35))';
+Pop_US = table2array(PopTable(3,5:35))';
+Pop_LIB = table2array(PopTable(2,5:35))';
+
+%% GDP Data
+filename = 'GDPpercapita.csv';
+GDPTable = readtable(filename);
+
+GDP_BRA = table2array(GDPTable(1,5:34))';
+GDP_US = table2array(GDPTable(3,5:34))';
+GDP_LIB = table2array(GDPTable(2,5:34))';
+
+%% Preliminary Data Analysis
+%% Forest Cover Basic Statistics
+F_Av_BRA = mean(Forest_BRA);
+F_Av_US = mean(Forest_US);
+F_Av_LIB = mean(Forest_LIB);
+
+F_Rate_BRA = gradient(Forest_BRA);
+F_Rate_US = gradient(Forest_US);
+F_Rate_LIB = gradient(Forest_LIB);
+
+F_Rate_Av_BRA = mean(F_Rate_BRA);
+F_Rate_Av_US = mean(F_Rate_US);
+F_Rate_Av_LIB = mean(F_Rate_LIB);
+
+%For F_DecAvs, the rows are Brazil, US, and Liberia in order from top to bottom and the columns are 1990s, 2000s, and 2010s in order from left to right 
+% the 2010s includes data from 2020
+F_DecAvs = NaN(3,3);
+for i = 1:3
+    if i == 1
+        idx = 1:10;
+        F_DecAvs(1,1) = mean(Forest_BRA(idx));
+        F_DecAvs(2,1) = mean(Forest_US(idx));
+        F_DecAvs(3,1) = mean(Forest_LIB(idx));
+    end
+    if i == 2
+        idx = 11:20;
+        F_DecAvs(1,2) = mean(Forest_BRA(idx));
+        F_DecAvs(2,2) = mean(Forest_US(idx));
+        F_DecAvs(3,2) = mean(Forest_LIB(idx));
+    end
+   if i == 3
+        idx = 21:31;
+        F_DecAvs(1,3) = mean(Forest_BRA(idx));
+        F_DecAvs(2,3) = mean(Forest_US(idx));
+        F_DecAvs(3,3) = mean(Forest_LIB(idx));
+   end
+end
+
+%% Population Basic Statistics
+P_Av_BRA = mean(Pop_BRA);
+P_Av_US = mean(Pop_US);
+P_Av_LIB = mean(Pop_LIB); 
+
+Pop_Rate_BRA = gradient(Pop_BRA);
+Pop_Rate_US = gradient(Pop_US);
+Pop_Rate_LIB = gradient(Pop_LIB);
+
+Pop_Rate_Av_BRA = mean(Pop_Rate_BRA);
+Pop_Rate_Av_US = mean(Pop_Rate_US);
+Pop_Rate_Av_LIB = mean(Pop_Rate_LIB);
+
+%For Pop_DecAvs, the rows are Brazil, US, and Liberia in order from top to bottom and the columns are 1990s, 2000s, and 2010s from left to right
+% the 2010s includes data from 2020
+Pop_DecAvs = NaN(3,3);
+for i = 1:3
+    if i == 1
+        idx = 1:10;
+        Pop_DecAvs(1,1) = mean(Pop_BRA(idx));
+        Pop_DecAvs(2,1) = mean(Pop_US(idx));
+        Pop_DecAvs(3,1) = mean(Pop_LIB(idx));
+    end
+    if i == 2
+        idx = 11:20;
+        Pop_DecAvs(1,2) = mean(Pop_BRA(idx));
+        Pop_DecAvs(2,2) = mean(Pop_US(idx));
+        Pop_DecAvs(3,2) = mean(Pop_LIB(idx));
+    end
+   if i == 3
+        idx = 21:31;
+        Pop_DecAvs(1,3) = mean(Pop_BRA(idx));
+        Pop_DecAvs(2,3) = mean(Pop_US(idx));
+        Pop_DecAvs(3,3) = mean(Pop_LIB(idx));
+   end
+end
+
+%% GDP Basic Statistics
+years_GDP = 1990:1:2019
+
+GDP_Av_BRA = mean(GDP_BRA);
+GDP_Av_US = mean(GDP_US);
+GDP_Av_LIB = nanmean(GDP_LIB); 
+
+GDP_Rate_BRA = gradient(GDP_BRA);
+GDP_Rate_US = gradient(GDP_US);
+GDP_Rate_LIB = gradient(GDP_LIB);
+
+GDP_Rate_Av_BRA = mean(GDP_Rate_BRA);
+GDP_Rate_Av_US = mean(GDP_Rate_US);
+GDP_Rate_Av_LIB = nanmean(GDP_Rate_LIB);
+
+% For GDP_DecAvs, the rows are Brazil, US, and Liberia in order from top to
+% bottom and the columns are 1990s, 2000s, and 2010s from left to right
+% the 2010s does not include data from 2020
+% missing data for Liberia during 1990s
+GDP_DecAvs = NaN(3,3);
+for i = 1:3
+    if i == 1
+        idx = 1:10;
+        GDP_DecAvs(1,1) = mean(GDP_BRA(idx));
+        GDP_DecAvs(2,1) = mean(GDP_US(idx));
+        GDP_DecAvs(3,1) = mean(GDP_LIB(idx));
+    end
+    if i == 2
+        idx = 11:20;
+        GDP_DecAvs(1,2) = mean(GDP_BRA(idx));
+        GDP_DecAvs(2,2) = mean(GDP_US(idx));
+        GDP_DecAvs(3,2) = mean(GDP_LIB(idx));
+    end
+   if i == 3
+        idx = 21:30;
+        GDP_DecAvs(1,3) = mean(GDP_BRA(idx));
+        GDP_DecAvs(2,3) = mean(GDP_US(idx));
+        GDP_DecAvs(3,3) = mean(GDP_LIB(idx));
+   end
+end
+   
+%% 
+figure (1); clf
+newcolors1 = [0 0 0; 0 0 1];
+colororder(newcolors1)
+
+subplot(2,1,1)
+yyaxis left
+plot(years, (100-Forest_US), 'k', 'LineWidth', 2)
+title('United States Forest Cover vs. Population Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
+yyaxis right
+plot(years, Pop_US, 'b', 'LineWidth', 2)
+ylabel('Population');
+
+hold on
+subplot(2,1,2)
+yyaxis left
+plot(years, (100-Forest_US), 'k', 'LineWidth', 2)
+title('United States Forest Cover vs. GDP Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
+yyaxis right
+plot(years_GDP, GDP_US, 'REPLACE_WITH_DASH_DASHb', 'LineWidth', 2)
+ylabel('GDP (USD)');
+
+
+figure (2)
+newcolors2 = [0 0 0; 0 1 0];
+colororder(newcolors2)
+
+subplot(2,1,1)
+yyaxis left
+plot(years, (100-Forest_BRA), 'k', 'LineWidth', 2)
+title('Brazil Forest Cover vs. Population Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
+yyaxis right
+plot(years, Pop_BRA, 'g', 'LineWidth', 2)
+ylabel('Population');
+
+hold on
+subplot(2,1,2)
+yyaxis left
+plot(years, (100-Forest_BRA), 'k', 'LineWidth', 2)
+title('Brazil Forest Cover vs. GDP Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
+yyaxis right
+plot(years_GDP, GDP_BRA, 'REPLACE_WITH_DASH_DASHg', 'LineWidth', 2)
+ylabel('GDP (USD)');
+
+
+figure (3); clf
+newcolors3 = [0 0 0; 1 0 0];
+colororder(newcolors3)
+
+subplot(2,1,1)
+yyaxis left
+plot(years, (100-Forest_LIB), 'k', 'LineWidth', 2)
+title('Liberia Forest Cover vs. Population Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
+yyaxis right
+plot(years, Pop_LIB, 'r', 'LineWidth', 2)
+ylabel('Population');
+
+hold on
+subplot(2,1,2)
+yyaxis left
+plot(years, (100-Forest_LIB), 'k', 'LineWidth', 2)
+title('Liberia Forest Cover vs. GDP Over Time');
+xlabel('Time (years)');
+ylabel('Forest Cover (% area)');
+yyaxis right
+plot(years_GDP, GDP_LIB, 'REPLACE_WITH_DASH_DASHr', 'LineWidth', 2)
+ylabel('GDP (USD)');
+
+%%
+[~,~, ~, ~, stats] = regress(Pop_BRA, (100-Forest_BRA));
+PopF_R2_BRA = stats(1,1);
+
+[~,~, ~, ~, stats] = regress(Pop_US, (100-Forest_US));
+PopF_R2_US = stats(1,1);
+
+[~,~, ~, ~, stats] = regress(Pop_LIB, (100-Forest_LIB));
+PopF_R2_LIB = stats(1,1);
+
+%%
+
+PopAv = [P_Av_BRA, P_Av_US, P_Av_LIB];
+
+figure(4); clf
+bar(PopAv)
+
+PopAvRate = [Pop_Rate_Av_BRA, Pop_Rate_Av_US, Pop_Rate_Av_LIB];
+
+figure(5); clf
+bar(PopAvRate)
+
+GDPAv = [GDP_Av_BRA, GDP_Av_US, GDP_Av_LIB];
+
+figure(6); clf
+bar(GDPAv)
+
+GDPAvRate = [GDP_Rate_Av_BRA, GDP_Rate_Av_US, GDP_Rate_Av_LIB];
+
+figure(7); clf
+bar(GDPAvRate)
+%%
+ForestCover1990 = [Forest_US(1), Forest_BRA(1), Forest_LIB(1)];
+X = categorical({'United States', 'Brazil', 'Liberia'});
+X = reordercats(X, {'United States', 'Brazil', 'Liberia'});
+
+% do we need y-label?
+figure(8); clf
+b = bar(X, ForestCover1990)
+b.FaceColor = 'Flat';
+b.CData(2,:) = [0 1 0]
+b.CData(3,:) = [1 0 0]
+title('Percent of Forest Cover in 1990')
+ylabel('Percent of Forest Cover')
+
+%%
+% unit for forest cover rate of change?
+figure(9)
+plot(years, F_Rate_US, 'b', 'LineWidth', 2)
+hold on
+plot(years, F_Rate_BRA, 'g', 'LineWidth', 2)
+plot(years, F_Rate_LIB, 'r', 'LineWidth', 2)
+legend('United States', 'Brazil', 'Liberia')
+title('Annual Forest Cover Rate of Change for 1990-2020')
+xlabel('Years')
+ylabel('Forest Cover Rate of Change')
+
+##### SOURCE END #####
+--></body></html>
